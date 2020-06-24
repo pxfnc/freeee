@@ -1,5 +1,3 @@
-import scala.annotation.tailrec
-
 trait Functor[F[_]] {
   def map[A, B](fa: F[A])(f: A => B): F[B]
 }
@@ -13,7 +11,7 @@ sealed abstract class Free[S[_], A] extends Product with Serializable {
   final def map[B](f: A => B): Free[S, B] = flatMap(a => Pure(f(a)))
   final def flatMap[B](f: A => Free[S, B]): Free[S, B] = FlatMapped(this, f)
 
-  @tailrec
+  @annotation.tailrec
   final def resume(implicit S: Functor[S]): Either[S[Free[S, A]], A] =
     this match {
       case Pure(a)    => Right(a)
